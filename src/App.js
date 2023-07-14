@@ -1,6 +1,7 @@
 import axios from "axios";
 import "./App.css";
 import { useEffect, useState, useRef } from "react";
+import UpdateForm from "./UpdateForm";
 
 function App() {
   const [id, setId] = useState("");
@@ -9,12 +10,11 @@ function App() {
 
   const [data, setData] = useState([]);
 
-  const [genderNameUpdate, setGenderNameUpdate] = useState("");
-  const [genderNoteUpdate, setGenderNoteUpdate] = useState("");
-
   const [showTable, setShowTable] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
+
+  const [userToUpdate, setUserToUpdate] = useState({});
 
   const modalRef = useRef();
 
@@ -50,17 +50,6 @@ function App() {
       .catch((error) => console.log(error));
   }
 
-  function update(e) {
-    e.preventDefault();
-    axios
-      .put(process.env.REACT_APP_SERVER + "/gender/" + id, {
-        id: id,
-        genderName: genderNameUpdate,
-        genderNote: genderNoteUpdate,
-      })
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error));
-  }
   function remove(id) {
     axios
       .delete(process.env.REACT_APP_SERVER + "/gender/" + id)
@@ -68,6 +57,12 @@ function App() {
         window.location.reload();
       })
       .catch((error) => console.log(error));
+  }
+
+  // update form
+  function ClickToUpdate(gen) {
+    console.log(gen);
+    return <UpdateForm text="i love you" />;
   }
 
   return (
@@ -138,6 +133,7 @@ function App() {
                       <button onClick={(id) => remove(gen.id)}>Delete</button>
                       <button
                         onClick={() => {
+                          setUserToUpdate(gen);
                           setShowUpdate(true);
                           setShowTable(false);
                         }}
@@ -152,41 +148,10 @@ function App() {
           )}
 
           {showUpdate && (
-            <div className="modal">
-              <form className="form">
-                <div onClick={() => setShowUpdate(false)} className="close">
-                  X
-                </div>
-                <div className="form-content">
-                  <input
-                    type="number"
-                    placeholder="id"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    placeholder="gender name"
-                    value={genderNameUpdate}
-                    onChange={(e) => setGenderNameUpdate(e.target.value)}
-                  />
-                  <textarea
-                    value={genderNoteUpdate}
-                    onChange={(e) => setGenderNoteUpdate(e.target.value)}
-                  >
-                    Gender Note
-                  </textarea>
-                  <button
-                    onClick={(e) => {
-                      update(e);
-                      window.location.reload();
-                    }}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
+            <UpdateForm
+              userToUpdate={userToUpdate}
+              setShowUpdate={setShowUpdate}
+            />
           )}
 
           {showForm && (
@@ -211,8 +176,8 @@ function App() {
                     Gender Note
                   </textarea>
                   <button
-                    onClick={(E) => {
-                      create(E);
+                    onClick={(e) => {
+                      create(e);
                       window.location.reload();
                     }}
                   >
