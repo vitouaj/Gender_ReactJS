@@ -22,7 +22,10 @@ export default function UpdateForm({ userToUpdate, setShowUpdate }) {
         console.log(res);
         window.location.reload();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        window.location.reload();
+      });
   }
 
   return (
