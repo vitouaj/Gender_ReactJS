@@ -18,9 +18,11 @@ export default function UpdateForm({ userToUpdate, setShowUpdate }) {
         genderName: genderNameUpdate,
         genderNote: genderNoteUpdate,
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        window.location.reload();
+      })
       .catch((error) => console.log(error));
-    window.location.reload();
   }
 
   return (
